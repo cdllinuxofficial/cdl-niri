@@ -1,0 +1,26 @@
+// ============================================================
+// cdl-niri additions for ~/.config/niri/config.kdl
+// The install script merges these into the user's existing config.
+// ============================================================
+
+// Required: set QT theming + desktop identity
+environment {
+    XDG_CURRENT_DESKTOP "niri"
+    QT_QPA_PLATFORMTHEME "kde"
+}
+
+// Required: quickshell shell
+spawn-at-startup "qs" "-c" "cdl-niri"
+
+// Optional: auto-expand windows script
+spawn-at-startup "python3" "~/.config/niri/cdl/auto-expand.py"
+
+// Required: cdl-niri keybinds
+// Add this line inside your existing config (not inside any block):
+// include "cdl/binds.kdl"
+
+// Required: quickshell layer rule (place shell behind other layers)
+layer-rule {
+    match namespace="^quickshell$"
+    place-within-backdrop true
+}
