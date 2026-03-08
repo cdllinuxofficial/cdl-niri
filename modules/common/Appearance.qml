@@ -31,8 +31,23 @@ Singleton {
         return Math.max(0, Math.min(0.22, y)) - 0.12 * (m3colors.darkmode ? 0 : 1)
     }
     property real autoContentTransparency: 0.9
-    property real backgroundTransparency: Config?.options.appearance.transparency.enable ? Config?.options.appearance.transparency.automatic ? autoBackgroundTransparency : Config?.options.appearance.transparency.backgroundTransparency : 0
-    property real contentTransparency: Config?.options.appearance.transparency.automatic ? autoContentTransparency : Config?.options.appearance.transparency.contentTransparency
+    property bool glassMode: Config?.options.appearance.surfaceStyle === "glass"
+    property bool blurBehindEnabled: glassMode && (Config?.options.appearance.glass.blurEnabled ?? true)
+
+    property real backgroundTransparency: {
+        if (glassMode) return 1 - (Config?.options.appearance.glass.backgroundOpacity ?? 0.55)
+        return Config?.options.appearance.transparency.enable
+            ? (Config?.options.appearance.transparency.automatic
+                ? autoBackgroundTransparency
+                : Config?.options.appearance.transparency.backgroundTransparency)
+            : 0
+    }
+    property real contentTransparency: {
+        if (glassMode) return 1 - (Config?.options.appearance.glass.contentOpacity ?? 0.80)
+        return Config?.options.appearance.transparency.automatic
+            ? autoContentTransparency
+            : Config?.options.appearance.transparency.contentTransparency
+    }
 
     m3colors: QtObject {
         property bool darkmode: true

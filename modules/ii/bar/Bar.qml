@@ -59,6 +59,11 @@ Scope {
                 mask: Region {
                     item: hoverMaskRegion
                 }
+                BackgroundEffect.blurRegion: Appearance.blurBehindEnabled ? barBlurRegion : null
+                Region {
+                    id: barBlurRegion
+                    item: barContent
+                }
                 color: "transparent"
 
                 // Positioning

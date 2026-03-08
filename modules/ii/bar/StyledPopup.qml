@@ -30,6 +30,11 @@ LazyLoader {
         mask: Region {
             item: popupBackground
         }
+        BackgroundEffect.blurRegion: Appearance.blurBehindEnabled ? popupBlurRegion : null
+        Region {
+            id: popupBlurRegion
+            item: popupBackground
+        }
 
         exclusionMode: ExclusionMode.Ignore
         exclusiveZone: 0
@@ -74,7 +79,9 @@ LazyLoader {
             }
             implicitWidth: root.contentItem.implicitWidth + margin * 2
             implicitHeight: root.contentItem.implicitHeight + margin * 2
-            color: Appearance.m3colors.m3surfaceContainer
+            color: Appearance.glassMode
+                ? ColorUtils.transparentize(Appearance.m3colors.m3surfaceContainer, 1 - (Config?.options.appearance.glass.contentOpacity ?? 0.80))
+                : Appearance.m3colors.m3surfaceContainer
             radius: Appearance.rounding.small
             children: [root.contentItem]
 

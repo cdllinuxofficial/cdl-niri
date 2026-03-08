@@ -116,6 +116,12 @@ Singleton {
                     property string reading: "Readex Pro"
                     property string expressive: "Space Grotesk"
                 }
+                property string surfaceStyle: "material" // "material" | "glass"
+                property JsonObject glass: JsonObject {
+                    property real backgroundOpacity: 0.55   // 0–1, panel background opacity in glass mode
+                    property real contentOpacity: 0.80      // 0–1, inner element opacity in glass mode
+                    property bool blurEnabled: true
+                }
                 property JsonObject transparency: JsonObject {
                     property bool enable: false
                     property bool automatic: true

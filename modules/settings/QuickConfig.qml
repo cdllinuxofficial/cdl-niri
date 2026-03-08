@@ -226,6 +226,35 @@ ContentPage {
                 Config.options.appearance.transparency.enable = checked;
             }
         }
+
+        ContentSubsection {
+            title: Translation.tr("Surface style")
+            ConfigSelectionArray {
+                currentValue: Config.options.appearance.surfaceStyle
+                onSelected: newValue => {
+                    Config.options.appearance.surfaceStyle = newValue
+                }
+                options: [
+                    { displayName: Translation.tr("Material"), icon: "layers", value: "material" },
+                    { displayName: Translation.tr("Glass"), icon: "blur_on", value: "glass" }
+                ]
+            }
+            ConfigSwitch {
+                visible: Config.options.appearance.surfaceStyle === "glass"
+                buttonIcon: "blur_on"
+                text: Translation.tr("Blur behind panels")
+                checked: Config.options.appearance.glass.blurEnabled
+                onCheckedChanged: Config.options.appearance.glass.blurEnabled = checked
+            }
+            ConfigSlider {
+                visible: Config.options.appearance.surfaceStyle === "glass"
+                icon: "opacity"
+                text: Translation.tr("Panel opacity (%)")
+                value: Math.round((Config.options.appearance.glass.backgroundOpacity ?? 0.55) * 100)
+                from: 20; to: 95; stepSize: 5
+                onMoved: Config.options.appearance.glass.backgroundOpacity = value / 100
+            }
+        }
     }
 
     ContentSection {

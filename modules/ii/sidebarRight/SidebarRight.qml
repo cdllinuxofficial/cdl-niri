@@ -22,6 +22,11 @@ Scope {
         WlrLayershell.namespace: "quickshell:sidebarRight"
         WlrLayershell.keyboardFocus: GlobalStates.sidebarRightOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
         color: "transparent"
+        BackgroundEffect.blurRegion: Appearance.blurBehindEnabled ? sidebarRightBlurRegion : null
+        Region {
+            id: sidebarRightBlurRegion
+            item: sidebarContentLoader
+        }
 
         anchors {
             top: true

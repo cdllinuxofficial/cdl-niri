@@ -66,6 +66,11 @@ Scope { // Scope
             // Hyprland 0.49: OnDemand is Exclusive, Exclusive just breaks click-outside-to-close
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
+            BackgroundEffect.blurRegion: Appearance.blurBehindEnabled ? sidebarLeftBlurRegion : null
+            Region {
+                id: sidebarLeftBlurRegion
+                item: sidebarLeftBackground
+            }
 
             anchors {
                 top: true
