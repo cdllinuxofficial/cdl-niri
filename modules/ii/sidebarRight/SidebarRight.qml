@@ -19,7 +19,6 @@ Scope {
         }
 
         exclusiveZone: 0
-        implicitWidth: sidebarWidth
         WlrLayershell.namespace: "quickshell:sidebarRight"
         WlrLayershell.keyboardFocus: GlobalStates.sidebarRightOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
         color: "transparent"
@@ -28,32 +27,27 @@ Scope {
             top: true
             right: true
             bottom: true
+            left: true
         }
 
-        onVisibleChanged: {
-            if (visible) {
-                GlobalFocusGrab.addDismissable(panelWindow);
-            } else {
-                GlobalFocusGrab.removeDismissable(panelWindow);
-            }
-        }
-        Connections {
-            target: GlobalFocusGrab
-            function onDismissed() {
-                panelWindow.hide();
-            }
+        MouseArea {
+            anchors.fill: parent
+            z: -1
+            onClicked: panelWindow.hide()
         }
 
         Loader {
             id: sidebarContentLoader
             active: GlobalStates.sidebarRightOpen || Config?.options.sidebar.keepRightSidebarLoaded
             anchors {
-                fill: parent
-                margins: Appearance.sizes.hyprlandGapsOut
-                leftMargin: Appearance.sizes.elevationMargin
+                top: parent.top
+                right: parent.right
+                bottom: parent.bottom
+                topMargin: Appearance.sizes.hyprlandGapsOut
+                rightMargin: Appearance.sizes.hyprlandGapsOut
+                bottomMargin: Appearance.sizes.hyprlandGapsOut
             }
             width: sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
-            height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
 
             focus: GlobalStates.sidebarRightOpen
             Keys.onPressed: event => {

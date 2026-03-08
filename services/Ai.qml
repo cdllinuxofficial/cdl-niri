@@ -316,7 +316,7 @@ Singleton {
         }
     }
 
-    property string requestScriptFilePath: "/tmp/quickshell/ai/request.sh"
+    property string requestScriptFilePath: "/tmp/cdl-niri/ai/request.sh"
     property string pendingFilePath: ""
 
     Component.onCompleted: {

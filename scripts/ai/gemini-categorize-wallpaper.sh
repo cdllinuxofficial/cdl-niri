@@ -11,14 +11,14 @@ SOURCE_IMG_PATH="$1"
 MODEL="${2:-${GEMINI_WALLPAPER_MODEL:-gemini-2.5-flash}}" # We use the flash variant so it's fast
 WALLPAPER_NAME="$(basename "$SOURCE_IMG_PATH")"
 PROMPT="${3:-${GEMINI_WALLPAPER_PROMPT:-Categorize the wallpaper. Its file name is $WALLPAPER_NAME}}"
-RESIZED_IMG_PATH="/tmp/quickshell/ai/wallpaper.jpg"
+RESIZED_IMG_PATH="/tmp/cdl-niri/ai/wallpaper.jpg"
 
 # Resize image for speed
 mkdir -p "$(dirname "$RESIZED_IMG_PATH")"
 magick "$SOURCE_IMG_PATH" -resize 200x -quality 50 "$RESIZED_IMG_PATH"
 
 # Get API key
-API_KEY=$(secret-tool lookup 'application' 'illogical-impulse' | jq -r '.apiKeys.gemini')
+API_KEY=$(secret-tool lookup 'application' 'cdl-niri' | jq -r '.apiKeys.gemini')
 
 # Encode image to base64
 if [[ "$(base64 --version 2>&1)" = *"FreeBSD"* ]]; then

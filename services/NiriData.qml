@@ -46,9 +46,10 @@ Singleton {
     // Public helpers
     // =========================================================
 
-    /** Workspaces belonging to a given output */
+    /** Workspaces belonging to a given output, sorted by idx */
     function workspacesForOutput(outputName) {
         return root.workspaces.filter(ws => ws.output === outputName)
+                              .sort((a, b) => a.idx - b.idx)
     }
 
     /** The focused (active) workspace on a given output */

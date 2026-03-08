@@ -69,7 +69,7 @@ ApplicationWindow {
 
     visible: true
     onClosing: Qt.quit()
-    title: "illogical-impulse Settings"
+    title: "cdl-niri Settings"
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
@@ -182,10 +182,10 @@ ApplicationWindow {
                         buttonText: justCopied ? Translation.tr("Path copied") : Translation.tr("Config file")
                         expanded: navRail.expanded
                         downAction: () => {
-                            Qt.openUrlExternally(`${Directories.config}/illogical-impulse/config.json`);
+                            Qt.openUrlExternally(Directories.shellConfigPath);
                         }
                         altAction: () => {
-                            Quickshell.clipboardText = CF.FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
+                            Quickshell.clipboardText = Directories.shellConfigPath;
                             fab.justCopied = true;
                             revertTextTimer.restart()
                         }

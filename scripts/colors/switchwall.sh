@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-QUICKSHELL_CONFIG_NAME="ii"
+QUICKSHELL_CONFIG_NAME="cdl-niri"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 CONFIG_DIR="$XDG_CONFIG_HOME/quickshell/$QUICKSHELL_CONFIG_NAME"
-CACHE_DIR="$XDG_CACHE_HOME/quickshell"
-STATE_DIR="$XDG_STATE_HOME/quickshell"
+CDL_NIRI_VENV="${CDL_NIRI_VENV:-$HOME/.venv/cdl-niri}"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/cdl-niri"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/cdl-niri"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SHELL_CONFIG_FILE="$XDG_CONFIG_HOME/illogical-impulse/config.json"
+SHELL_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/cdl-niri/config.json"
 MATUGEN_DIR="$XDG_CONFIG_HOME/matugen"
 terminalscheme="$SCRIPT_DIR/terminal/scheme-base.json"
 
@@ -307,7 +308,7 @@ switch() {
     fi
 
     matugen "${matugen_args[@]}"
-    source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
+    source "$(eval echo $CDL_NIRI_VENV)/bin/activate"
     python3 "$SCRIPT_DIR/generate_colors_material.py" "${generate_colors_material_args[@]}" \
         > "$STATE_DIR"/user/generated/material_colors.scss
     "$SCRIPT_DIR"/applycolor.sh
@@ -340,7 +341,7 @@ main() {
 
     detect_scheme_type_from_image() {
         local img="$1"
-        source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
+        source "$(eval echo $CDL_NIRI_VENV)/bin/activate"
         "$SCRIPT_DIR"/scheme_for_image.py "$img" 2>/dev/null | tr -d '\n'
         deactivate
     }
@@ -363,7 +364,7 @@ main() {
                     set_accent_color ""
                     shift 2
                 else
-                    set_accent_color $(hyprpicker --no-fancy)
+                    set_accent_color $(hyprpicker --no-fancy 2>/dev/null || wl-color-picker 2>/dev/null || echo "")
                     shift
                 fi
                 ;;

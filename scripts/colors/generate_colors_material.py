@@ -1,4 +1,4 @@
-#!/usr/bin/env -S\_/bin/sh\_-c\_"source\_\$(eval\_echo\_\$ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate&&exec\_python\_-E\_"\$0"\_"\$@""
+#!/usr/bin/env -S /bin/sh -c "source $(eval echo ${CDL_NIRI_VENV:-$HOME/.venv/cdl-niri})/bin/activate&&exec python -E \"$0\" \"$@\""
 import argparse
 import math
 import json
@@ -137,7 +137,7 @@ if args.termscheme is not None:
         json_termscheme = f.read()
     term_source_colors = json.loads(json_termscheme)['dark' if darkmode else 'light']
 
-    primary_color_argb = hex_to_argb(material_colors['primary_paletteKeyColor'])
+    primary_color_argb = hex_to_argb(material_colors['primaryPaletteKeyColor'])
     for color, val in term_source_colors.items():
         if(args.scheme == 'monochrome') :
             term_colors[color] = val

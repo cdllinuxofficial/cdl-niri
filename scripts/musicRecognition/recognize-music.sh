@@ -4,7 +4,7 @@ INTERVAL=2
 TOTAL_DURATION=30
 MIN_VALID_RESULT_LENGTH=300
 SOURCE_TYPE="monitor"  # monitor | input
-TMP_PATH="/tmp/quickshell/media/songrec"
+TMP_PATH="/tmp/cdl-niri/media/songrec"
 TMP_RAW="$TMP_PATH/recording.raw"
 TMP_MP3="$TMP_PATH/recording.mp3"
 
