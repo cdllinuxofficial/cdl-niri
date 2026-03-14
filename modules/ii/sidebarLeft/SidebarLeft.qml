@@ -90,6 +90,27 @@ Scope { // Scope
                 target: sidebarLeftBackground
                 radius: sidebarLeftBackground.radius
             }
+
+            // Glass background (sibling, drawn before sidebarLeftBackground)
+            Rectangle {
+                id: leftGlass
+                visible: Appearance.glassMode
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: Appearance.sizes.hyprlandGapsOut
+                anchors.leftMargin: Appearance.sizes.hyprlandGapsOut
+                width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
+                height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
+                radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
+                property string cfgColor: Config?.options.appearance.glass.sidebarLeft.color ?? ""
+                color: cfgColor !== ""
+                    ? Qt.rgba(Qt.color(cfgColor).r, Qt.color(cfgColor).g, Qt.color(cfgColor).b,
+                              Config?.options.appearance.glass.sidebarLeft.opacity ?? 0.75)
+                    : Qt.rgba(Appearance.colors.colLayer0Base.r, Appearance.colors.colLayer0Base.g,
+                              Appearance.colors.colLayer0Base.b,
+                              Config?.options.appearance.glass.sidebarLeft.opacity ?? 0.75)
+            }
+
             Rectangle {
                 id: sidebarLeftBackground
                 anchors.top: parent.top
@@ -98,8 +119,8 @@ Scope { // Scope
                 anchors.leftMargin: Appearance.sizes.hyprlandGapsOut
                 width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
                 height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
-                color: Appearance.colors.colLayer0
-                border.width: 1
+                color: Appearance.glassMode ? "transparent" : Appearance.colors.colLayer0
+                border.width: Appearance.glassMode ? 0 : 1
                 border.color: Appearance.colors.colLayer0Border
                 radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
 

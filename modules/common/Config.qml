@@ -118,9 +118,17 @@ Singleton {
                 }
                 property string surfaceStyle: "material" // "material" | "glass"
                 property JsonObject glass: JsonObject {
-                    property real backgroundOpacity: 0.55   // 0–1, panel background opacity in glass mode
+                    property real backgroundOpacity: 0.55   // 0–1, bar/popup background opacity in glass mode
                     property real contentOpacity: 0.80      // 0–1, inner element opacity in glass mode
                     property bool blurEnabled: true
+                    property JsonObject sidebarLeft: JsonObject {
+                        property string color: ""           // hex color, "" = use theme color
+                        property real opacity: 0.75         // 0–1, solid overlay opacity
+                    }
+                    property JsonObject sidebarRight: JsonObject {
+                        property string color: ""
+                        property real opacity: 0.75
+                    }
                 }
                 property JsonObject transparency: JsonObject {
                     property bool enable: false

@@ -41,10 +41,21 @@ Item { // Bar content region
             fill: parent
             margins: Config.options.bar.cornerStyle === 1 ? (Appearance.sizes.hyprlandGapsOut) : 0 // idk why but +1 is needed
         }
-        color: Config.options.bar.showBackground ? Appearance.colors.colLayer0 : "transparent"
+        color: Config.options.bar.showBackground
+            ? (Appearance.glassMode ? "transparent" : Appearance.colors.colLayer0)
+            : "transparent"
+        clip: Appearance.glassMode && Config.options.bar.showBackground
         radius: Config.options.bar.cornerStyle === 1 ? Appearance.rounding.windowRounding : 0
-        border.width: Config.options.bar.cornerStyle === 1 ? 1 : 0
+        border.width: (!Appearance.glassMode && Config.options.bar.cornerStyle === 1) ? 1 : 0
         border.color: Appearance.colors.colLayer0Border
+
+        GlassBackground {
+            anchors.fill: parent
+            screenX: barBackground.mapToGlobal(0, 0).x
+            screenY: barBackground.mapToGlobal(0, 0).y
+            radius: parent.radius
+            visible: Appearance.glassMode && Config.options.bar.showBackground
+        }
     }
 
     FocusedScrollMouseArea { // Left side | scroll to change brightness

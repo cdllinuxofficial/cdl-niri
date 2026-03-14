@@ -239,21 +239,126 @@ ContentPage {
                     { displayName: Translation.tr("Glass"), icon: "blur_on", value: "glass" }
                 ]
             }
+
+            // Bar / popups
             ConfigSwitch {
                 visible: Config.options.appearance.surfaceStyle === "glass"
                 buttonIcon: "blur_on"
-                text: Translation.tr("Blur behind panels")
+                text: Translation.tr("Bar: blur behind")
                 checked: Config.options.appearance.glass.blurEnabled
                 onCheckedChanged: Config.options.appearance.glass.blurEnabled = checked
             }
             ConfigSlider {
                 visible: Config.options.appearance.surfaceStyle === "glass"
                 buttonIcon: "opacity"
-                text: Translation.tr("Panel opacity (%)")
+                text: Translation.tr("Bar opacity (%)")
                 value: Math.round((Config.options.appearance.glass.backgroundOpacity ?? 0.55) * 100)
-                from: 20
+                from: 5
                 to: 95
                 onValueChanged: Config.options.appearance.glass.backgroundOpacity = value / 100
+            }
+
+            // Left sidebar
+            ContentSubsection {
+                visible: Config.options.appearance.surfaceStyle === "glass"
+                title: Translation.tr("Left sidebar")
+
+                ConfigSlider {
+                    buttonIcon: "opacity"
+                    text: Translation.tr("Opacity (%)")
+                    value: Math.round((Config.options.appearance.glass.sidebarLeft.opacity ?? 0.75) * 100)
+                    from: 5
+                    to: 100
+                    onValueChanged: Config.options.appearance.glass.sidebarLeft.opacity = value / 100
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MaterialSymbol {
+                        iconSize: Appearance.font.pixelSize.normal
+                        text: "palette"
+                        color: Appearance.colors.colOnLayer0
+                    }
+                    StyledText {
+                        text: Translation.tr("Color (hex, empty = theme)")
+                        color: Appearance.colors.colOnLayer0
+                        font.pixelSize: Appearance.font.pixelSize.small
+                        Layout.fillWidth: true
+                    }
+                    // Color preview swatch
+                    Rectangle {
+                        width: 24; height: 24
+                        radius: 4
+                        color: {
+                            const c = Config.options.appearance.glass.sidebarLeft.color;
+                            return (c && c !== "") ? c : Appearance.colors.colLayer0Base;
+                        }
+                        border.width: 1
+                        border.color: Appearance.colors.colLayer0Border
+                    }
+                    MaterialTextField {
+                        implicitWidth: 110
+                        text: Config.options.appearance.glass.sidebarLeft.color
+                        placeholderText: "#rrggbb"
+                        onEditingFinished: {
+                            const val = text.trim();
+                            Config.options.appearance.glass.sidebarLeft.color = val;
+                        }
+                    }
+                }
+            }
+
+            // Right sidebar
+            ContentSubsection {
+                visible: Config.options.appearance.surfaceStyle === "glass"
+                title: Translation.tr("Right sidebar")
+
+                ConfigSlider {
+                    buttonIcon: "opacity"
+                    text: Translation.tr("Opacity (%)")
+                    value: Math.round((Config.options.appearance.glass.sidebarRight.opacity ?? 0.75) * 100)
+                    from: 5
+                    to: 100
+                    onValueChanged: Config.options.appearance.glass.sidebarRight.opacity = value / 100
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MaterialSymbol {
+                        iconSize: Appearance.font.pixelSize.normal
+                        text: "palette"
+                        color: Appearance.colors.colOnLayer0
+                    }
+                    StyledText {
+                        text: Translation.tr("Color (hex, empty = theme)")
+                        color: Appearance.colors.colOnLayer0
+                        font.pixelSize: Appearance.font.pixelSize.small
+                        Layout.fillWidth: true
+                    }
+                    Rectangle {
+                        width: 24; height: 24
+                        radius: 4
+                        color: {
+                            const c = Config.options.appearance.glass.sidebarRight.color;
+                            return (c && c !== "") ? c : Appearance.colors.colLayer0Base;
+                        }
+                        border.width: 1
+                        border.color: Appearance.colors.colLayer0Border
+                    }
+                    MaterialTextField {
+                        implicitWidth: 110
+                        text: Config.options.appearance.glass.sidebarRight.color
+                        placeholderText: "#rrggbb"
+                        onEditingFinished: {
+                            const val = text.trim();
+                            Config.options.appearance.glass.sidebarRight.color = val;
+                        }
+                    }
+                }
             }
         }
     }

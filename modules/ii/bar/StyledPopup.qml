@@ -67,6 +67,20 @@ LazyLoader {
             target: popupBackground
         }
 
+        GlassBackground {
+            anchors {
+                fill: parent
+                leftMargin: Appearance.sizes.elevationMargin + root.popupBackgroundMargin * (!popupWindow.anchors.left)
+                rightMargin: Appearance.sizes.elevationMargin + root.popupBackgroundMargin * (!popupWindow.anchors.right)
+                topMargin: Appearance.sizes.elevationMargin + root.popupBackgroundMargin * (!popupWindow.anchors.top)
+                bottomMargin: Appearance.sizes.elevationMargin + root.popupBackgroundMargin * (!popupWindow.anchors.bottom)
+            }
+            screenX: popupBackground.mapToGlobal(0, 0).x
+            screenY: popupBackground.mapToGlobal(0, 0).y
+            radius: Appearance.rounding.small
+            overlayOpacity: 1 - (Config?.options.appearance.glass.contentOpacity ?? 0.80)
+        }
+
         Rectangle {
             id: popupBackground
             readonly property real margin: 10
@@ -80,7 +94,7 @@ LazyLoader {
             implicitWidth: root.contentItem.implicitWidth + margin * 2
             implicitHeight: root.contentItem.implicitHeight + margin * 2
             color: Appearance.glassMode
-                ? ColorUtils.transparentize(Appearance.m3colors.m3surfaceContainer, 1 - (Config?.options.appearance.glass.contentOpacity ?? 0.80))
+                ? "transparent"
                 : Appearance.m3colors.m3surfaceContainer
             radius: Appearance.rounding.small
             children: [root.contentItem]

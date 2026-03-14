@@ -46,14 +46,30 @@ Item {
     StyledRectangularShadow {
         target: sidebarRightBackground
     }
+
+    // Glass background (sibling, drawn before sidebarRightBackground)
+    Rectangle {
+        id: rightGlass
+        visible: Appearance.glassMode
+        anchors.fill: parent
+        radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
+        property string cfgColor: Config?.options.appearance.glass.sidebarRight.color ?? ""
+        color: cfgColor !== ""
+            ? Qt.rgba(Qt.color(cfgColor).r, Qt.color(cfgColor).g, Qt.color(cfgColor).b,
+                      Config?.options.appearance.glass.sidebarRight.opacity ?? 0.75)
+            : Qt.rgba(Appearance.colors.colLayer0Base.r, Appearance.colors.colLayer0Base.g,
+                      Appearance.colors.colLayer0Base.b,
+                      Config?.options.appearance.glass.sidebarRight.opacity ?? 0.75)
+    }
+
     Rectangle {
         id: sidebarRightBackground
 
         anchors.fill: parent
         implicitHeight: parent.height - Appearance.sizes.hyprlandGapsOut * 2
         implicitWidth: sidebarWidth - Appearance.sizes.hyprlandGapsOut * 2
-        color: Appearance.colors.colLayer0
-        border.width: 1
+        color: Appearance.glassMode ? "transparent" : Appearance.colors.colLayer0
+        border.width: Appearance.glassMode ? 0 : 1
         border.color: Appearance.colors.colLayer0Border
         radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
 
