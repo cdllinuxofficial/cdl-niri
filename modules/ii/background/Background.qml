@@ -29,11 +29,8 @@ Variants {
         property var fullscreenToplevels: ToplevelManager.toplevels.values.filter(tl => tl.wayland?.fullscreen)
         visible: GlobalStates.screenLocked || fullscreenToplevels.length === 0 || !Config?.options.background.hideWhenFullscreen
 
-        // Workspaces (niri: dynamic, not needed for wallpaper parallax; use screen name)
         property string outputName: modelData.name
         property list<var> relevantWindows: NiriData.workspacesForOutput(outputName).reduce((acc, ws) => acc.concat(NiriData.windowsForWorkspace(ws.id)), [])
-        property int firstWorkspaceId: 1
-        property int lastWorkspaceId: Math.max(NiriData.workspacesForOutput(outputName).length, 1)
         // Wallpaper
         property bool wallpaperIsVideo: Config.options.background.wallpaperPath.endsWith(".mp4") || Config.options.background.wallpaperPath.endsWith(".webm") || Config.options.background.wallpaperPath.endsWith(".mkv") || Config.options.background.wallpaperPath.endsWith(".avi") || Config.options.background.wallpaperPath.endsWith(".mov")
         property string wallpaperPath: wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath
@@ -44,13 +41,11 @@ Variants {
             return enabled && sensitiveWallpaper && sensitiveNetwork;
         }
         property real wallpaperToScreenRatio: Math.min(wallpaperWidth / screen.width, wallpaperHeight / screen.height)
-        property real preferredWallpaperScale: Config.options.background.parallax.workspaceZoom
         property real effectiveWallpaperScale: 1 // Some reasonable init value, to be updated
         property int wallpaperWidth: modelData.width // Some reasonable init value, to be updated
         property int wallpaperHeight: modelData.height // Some reasonable init value, to be updated
         property real movableXSpace: ((wallpaperWidth / wallpaperToScreenRatio * effectiveWallpaperScale) - screen.width) / 2
         property real movableYSpace: ((wallpaperHeight / wallpaperToScreenRatio * effectiveWallpaperScale) - screen.height) / 2
-        readonly property bool verticalParallax: (Config.options.background.parallax.autoVertical && wallpaperHeight > wallpaperWidth) || Config.options.background.parallax.vertical
         // Colors
         property bool shouldBlur: (GlobalStates.screenLocked && Config.options.lock.blur.enable)
         property color dominantColor: Appearance.colors.colPrimary // Default, to be changed
@@ -112,8 +107,8 @@ Variants {
                         // Undersized/perfectly sized wallpapers
                         bgRoot.effectiveWallpaperScale = Math.max(screenWidth / width, screenHeight / height);
                     } else {
-                        // Oversized = can be zoomed for parallax, yay
-                        bgRoot.effectiveWallpaperScale = Math.min(bgRoot.preferredWallpaperScale, width / screenWidth, height / screenHeight);
+                        // Oversized: fit to screen (no parallax zoom)
+                        bgRoot.effectiveWallpaperScale = 1.0;
                     }
                 }
             }
@@ -130,46 +125,10 @@ Variants {
                 opacity: (status === Image.Ready && !bgRoot.wallpaperIsVideo) ? 1 : 0
                 cache: false
                 smooth: false
-                // Range = groups that workspaces span on
-                property int chunkSize: Config?.options.bar.workspaces.shown ?? 10
-                property int lower: Math.floor(bgRoot.firstWorkspaceId / chunkSize) * chunkSize
-                property int upper: Math.ceil(bgRoot.lastWorkspaceId / chunkSize) * chunkSize
-                property int range: upper - lower
-                property real valueX: {
-                    let result = 0.5;
-                    if (Config.options.background.parallax.enableWorkspace && !bgRoot.verticalParallax) {
-                        result = ((NiriData.activeWorkspaceForOutput(bgRoot.outputName)?.idx - lower) / range);
-                    }
-                    if (Config.options.background.parallax.enableSidebar) {
-                        result += (0.15 * GlobalStates.sidebarRightOpen - 0.15 * GlobalStates.sidebarLeftOpen);
-                    }
-                    return result;
-                }
-                property real valueY: {
-                    let result = 0.5;
-                    if (Config.options.background.parallax.enableWorkspace && bgRoot.verticalParallax) {
-                        result = ((NiriData.activeWorkspaceForOutput(bgRoot.outputName)?.idx - lower) / range);
-                    }
-                    return result;
-                }
-                property real effectiveValueX: Math.max(0, Math.min(1, valueX))
-                property real effectiveValueY: Math.max(0, Math.min(1, valueY))
-                x: -(bgRoot.movableXSpace) - (effectiveValueX - 0.5) * 2 * bgRoot.movableXSpace
-                y: -(bgRoot.movableYSpace) - (effectiveValueY - 0.5) * 2 * bgRoot.movableYSpace
+                x: -bgRoot.movableXSpace
+                y: -bgRoot.movableYSpace
                 source: bgRoot.wallpaperSafetyTriggered ? "" : bgRoot.wallpaperPath
                 fillMode: Image.PreserveAspectCrop
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 600
-                        easing.type: Easing.OutCubic
-                    }
-                }
-                Behavior on y {
-                    NumberAnimation {
-                        duration: 600
-                        easing.type: Easing.OutCubic
-                    }
-                }
                 sourceSize {
                     width: bgRoot.screen.width * bgRoot.effectiveWallpaperScale * bgRoot.screen.devicePixelRatio
                     height: bgRoot.screen.height * bgRoot.effectiveWallpaperScale * bgRoot.screen.devicePixelRatio
@@ -213,23 +172,8 @@ Variants {
                     bottom: wallpaper.bottom
                     horizontalCenter: undefined
                     verticalCenter: undefined
-                    readonly property real parallaxFactor: Config.options.background.parallax.widgetsFactor
-                    leftMargin: {
-                        const xOnWallpaper = bgRoot.movableXSpace;
-                        const extraMove = (wallpaper.effectiveValueX * 2 * bgRoot.movableXSpace) * (parallaxFactor - 1);
-                        return xOnWallpaper - extraMove;
-                    }
-                    topMargin: {
-                        const yOnWallpaper = bgRoot.movableYSpace;
-                        const extraMove = (wallpaper.effectiveValueY * 2 * bgRoot.movableYSpace) * (parallaxFactor - 1);
-                        return yOnWallpaper - extraMove;
-                    }
-                    Behavior on leftMargin {
-                        animation: Appearance.animation.elementMove.numberAnimation.createObject(this)
-                    }
-                    Behavior on topMargin {
-                        animation: Appearance.animation.elementMove.numberAnimation.createObject(this)
-                    }
+                    leftMargin: bgRoot.movableXSpace
+                    topMargin: bgRoot.movableYSpace
                 }
                 width: wallpaper.width
                 height: wallpaper.height

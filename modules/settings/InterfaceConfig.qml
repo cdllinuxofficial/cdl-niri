@@ -145,26 +145,6 @@ ContentPage {
         icon: "lock"
         title: Translation.tr("Lock screen")
 
-        ConfigSwitch {
-            buttonIcon: "water_drop"
-            text: Translation.tr('Use Hyprlock (instead of Quickshell)')
-            checked: Config.options.lock.useHyprlock
-            onCheckedChanged: {
-                Config.options.lock.useHyprlock = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("If you want to somehow use fingerprint unlock...")
-            }
-        }
-
-        ConfigSwitch {
-            buttonIcon: "account_circle"
-            text: Translation.tr('Launch on startup')
-            checked: Config.options.lock.launchOnStartup
-            onCheckedChanged: {
-                Config.options.lock.launchOnStartup = checked;
-            }
-        }
 
         ContentSubsection {
             title: Translation.tr("Security")
@@ -289,59 +269,7 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "point_scan"
-        title: Translation.tr("Overlay: Crosshair")
 
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("Crosshair code (in Valorant's format)")
-            text: Config.options.crosshair.code
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.crosshair.code = text;
-            }
-        }
-
-        RowLayout {
-            StyledText {
-                Layout.leftMargin: 10
-                color: Appearance.colors.colSubtext
-                font.pixelSize: Appearance.font.pixelSize.smallie
-                text: Translation.tr("Press Super+G to open the overlay and pin the crosshair")
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            RippleButtonWithIcon {
-                id: editorButton
-                buttonRadius: Appearance.rounding.full
-                materialIcon: "open_in_new"
-                mainText: Translation.tr("Open editor")
-                onClicked: {
-                    Qt.openUrlExternally(`https://www.vcrdb.net/builder?c=${Config.options.crosshair.code}`);
-                }
-                StyledToolTip {
-                    text: "www.vcrdb.net"
-                }
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "point_scan"
-        title: Translation.tr("Overlay: Floating Image")
-
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("Image source")
-            text: Config.options.overlay.floatingImage.imageSource
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.overlay.floatingImage.imageSource = text;
-            }
-        }
-    }
 
     ContentSection {
         icon: "screenshot_frame_2"
@@ -899,6 +827,61 @@ ContentPage {
                 wrapMode: TextEdit.NoWrap
                 onTextChanged: {
                     Config.options.appearance.fonts.expressive = text;
+                }
+            }
+        }
+    }
+
+    ContentSection {
+        icon: "apps"
+        title: "Apps"
+
+        ContentSubsection {
+            title: "Launch commands"
+
+            ConfigRow {
+                ContentSubsectionLabel { text: "Terminal" }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "kitty -1"
+                    text: Config.options.apps.terminal
+                    onEditingFinished: { Config.options.apps.terminal = text; }
+                }
+            }
+            ConfigRow {
+                ContentSubsectionLabel { text: "Task manager" }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "plasma-systemmonitor --page-name Processes"
+                    text: Config.options.apps.taskManager
+                    onEditingFinished: { Config.options.apps.taskManager = text; }
+                }
+            }
+            ConfigRow {
+                ContentSubsectionLabel { text: "Volume mixer" }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "pavucontrol-qt"
+                    text: Config.options.apps.volumeMixer
+                    onEditingFinished: { Config.options.apps.volumeMixer = text; }
+                }
+            }
+            ConfigRow {
+                ContentSubsectionLabel { text: "Network" }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "kcmshell6 kcm_networkmanagement"
+                    text: Config.options.apps.network
+                    onEditingFinished: { Config.options.apps.network = text; }
+                }
+            }
+            ConfigRow {
+                ContentSubsectionLabel { text: "Bluetooth" }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "kcmshell6 kcm_bluetooth"
+                    text: Config.options.apps.bluetooth
+                    onEditingFinished: { Config.options.apps.bluetooth = text; }
                 }
             }
         }

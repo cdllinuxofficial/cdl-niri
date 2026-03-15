@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import QtQuick.Layouts
 import qs.services
 import qs.modules.common
@@ -9,12 +8,6 @@ import qs.modules.common.widgets
 
 ContentPage {
     forceWidth: true
-
-    Process {
-        id: translationProc
-        property string locale: ""
-        command: [Directories.aiTranslationScriptPath, translationProc.locale]
-    }
 
     ContentSection {
         icon: "volume_up"
@@ -164,31 +157,6 @@ ContentPage {
                 }
             }
         }
-        ContentSubsection {
-            title: Translation.tr("Generate translation with Gemini")
-            tooltip: Translation.tr("You'll need to enter your Gemini API key first.\nType /key on the sidebar for instructions.")
-
-            ConfigRow {
-                MaterialTextArea {
-                    id: localeInput
-                    Layout.fillWidth: true
-                    placeholderText: Translation.tr("Locale code, e.g. fr_FR, de_DE, zh_CN...")
-                    text: Config.options.language.ui === "auto" ? Qt.locale().name : Config.options.language.ui
-                }
-                RippleButtonWithIcon {
-                    id: generateTranslationBtn
-                    Layout.fillHeight: true
-                    nerdIcon: ""
-                    enabled: !translationProc.running || (translationProc.locale !== localeInput.text.trim())
-                    mainText: enabled ? Translation.tr("Generate\nTypically takes 2 minutes") : Translation.tr("Generating...\nDon't close this window!")
-                    onClicked: {
-                        translationProc.locale = localeInput.text.trim();
-                        translationProc.running = false;
-                        translationProc.running = true;
-                    }
-                }
-            }
-        }
     }
 
     ContentSection {
@@ -228,37 +196,7 @@ ContentPage {
                 }
             }
 
-            // Weeb policy
-            ColumnLayout {
 
-                ContentSubsectionLabel {
-                    text: Translation.tr("Weeb")
-                }
-
-                ConfigSelectionArray {
-                    currentValue: Config.options.policies.weeb
-                    onSelected: newValue => {
-                        Config.options.policies.weeb = newValue;
-                    }
-                    options: [
-                        {
-                            displayName: Translation.tr("No"),
-                            icon: "close",
-                            value: 0
-                        },
-                        {
-                            displayName: Translation.tr("Yes"),
-                            icon: "check",
-                            value: 1
-                        },
-                        {
-                            displayName: Translation.tr("Closet"),
-                            icon: "ev_shadow",
-                            value: 2
-                        }
-                    ]
-                }
-            }
         }
     }
 
@@ -309,12 +247,6 @@ ContentPage {
             ConfigSelectionArray {
                 currentValue: Config.options.time.format
                 onSelected: newValue => {
-                    if (newValue === "hh:mm") {
-                        Quickshell.execDetached(["bash", "-c", `sed -i 's/\\TIME12\\b/TIME/' '${FileUtils.trimFileProtocol(Directories.config)}/hypr/hyprlock.conf'`]);
-                    } else {
-                        Quickshell.execDetached(["bash", "-c", `sed -i 's/\\TIME\\b/TIME12/' '${FileUtils.trimFileProtocol(Directories.config)}/hypr/hyprlock.conf'`]);
-                    }
-
                     Config.options.time.format = newValue;
                 }
                 options: [
@@ -336,23 +268,90 @@ ContentPage {
     }
 
     ContentSection {
-        icon: "work_alert"
-        title: Translation.tr("Work safety")
+        icon: "bedtime"
+        title: "Night Light"
 
         ConfigSwitch {
-            buttonIcon: "assignment"
-            text: Translation.tr("Hide clipboard images copied from sussy sources")
-            checked: Config.options.workSafety.enable.clipboard
-            onCheckedChanged: {
-                Config.options.workSafety.enable.clipboard = checked;
+            buttonIcon: "schedule"
+            text: "Automatic schedule"
+            checked: Config.options.light.night.automatic
+            onCheckedChanged: { Config.options.light.night.automatic = checked; }
+            StyledToolTip { text: "Turn on/off night light automatically based on time" }
+        }
+
+        ContentSubsection {
+            title: "Schedule"
+            enabled: Config.options.light.night.automatic
+
+            ConfigRow {
+                uniform: true
+                ConfigRow {
+                    ContentSubsectionLabel { text: "From" }
+                    MaterialTextField {
+                        placeholderText: "19:00"
+                        text: Config.options.light.night.from
+                        onEditingFinished: { Config.options.light.night.from = text; }
+                    }
+                }
+                ConfigRow {
+                    ContentSubsectionLabel { text: "To" }
+                    MaterialTextField {
+                        placeholderText: "06:30"
+                        text: Config.options.light.night.to
+                        onEditingFinished: { Config.options.light.night.to = text; }
+                    }
+                }
             }
         }
+
+        ConfigSpinBox {
+            icon: "thermometer"
+            text: "Color temperature (K)"
+            value: Config.options.light.night.colorTemperature
+            from: 1000
+            to: 6500
+            stepSize: 100
+            onValueChanged: { Config.options.light.night.colorTemperature = value; }
+            StyledToolTip { text: "Lower = warmer/more red, Higher = cooler/more blue\nDefault: 5000K" }
+        }
+    }
+
+    ContentSection {
+        icon: "touch_app"
+        title: "Interactions"
+
         ConfigSwitch {
-            buttonIcon: "wallpaper"
-            text: Translation.tr("Hide sussy/anime wallpapers")
-            checked: Config.options.workSafety.enable.wallpaper
-            onCheckedChanged: {
-                Config.options.workSafety.enable.wallpaper = checked;
+            buttonIcon: "swipe"
+            text: "Faster touchpad scroll"
+            checked: Config.options.interactions.scrolling.fasterTouchpadScroll
+            onCheckedChanged: { Config.options.interactions.scrolling.fasterTouchpadScroll = checked; }
+            StyledToolTip { text: "Enables custom scroll speed handling for smoother touchpad scrolling" }
+        }
+
+        ContentSubsection {
+            title: "Scroll speed"
+            enabled: Config.options.interactions.scrolling.fasterTouchpadScroll
+
+            ConfigRow {
+                uniform: true
+                ConfigSpinBox {
+                    icon: "gesture"
+                    text: "Touchpad factor"
+                    value: Config.options.interactions.scrolling.touchpadScrollFactor
+                    from: 50
+                    to: 2000
+                    stepSize: 50
+                    onValueChanged: { Config.options.interactions.scrolling.touchpadScrollFactor = value; }
+                }
+                ConfigSpinBox {
+                    icon: "mouse"
+                    text: "Mouse factor"
+                    value: Config.options.interactions.scrolling.mouseScrollFactor
+                    from: 10
+                    to: 500
+                    stepSize: 10
+                    onValueChanged: { Config.options.interactions.scrolling.mouseScrollFactor = value; }
+                }
             }
         }
     }

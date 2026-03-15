@@ -99,7 +99,7 @@ ContentPage {
                     font.pixelSize: Appearance.font.pixelSize.title
                 }
                 StyledText {
-                    text: "https://github.com/end-4/dots-hyprland"
+                    text: "[quickshell.outfoxxed.me](https://quickshell.outfoxxed.me)"
                     font.pixelSize: Appearance.font.pixelSize.normal
                     textFormat: Text.MarkdownText
                     onLinkActivated: (link) => {
@@ -118,33 +118,17 @@ ContentPage {
                 materialIcon: "auto_stories"
                 mainText: Translation.tr("Documentation")
                 onClicked: {
-                    Qt.openUrlExternally("https://end-4.github.io/dots-hyprland-wiki/en/ii-qs/02usage/")
-                }
-            }
-            RippleButtonWithIcon {
-                materialIcon: "adjust"
-                materialIconFill: false
-                mainText: Translation.tr("Issues")
-                onClicked: {
-                    Qt.openUrlExternally("https://github.com/end-4/dots-hyprland/issues")
+                    Qt.openUrlExternally("https://quickshell.outfoxxed.me")
                 }
             }
             RippleButtonWithIcon {
                 materialIcon: "forum"
-                mainText: Translation.tr("Discussions")
+                mainText: Translation.tr("niri compositor")
                 onClicked: {
-                    Qt.openUrlExternally("https://github.com/end-4/dots-hyprland/discussions")
-                }
-            }
-            RippleButtonWithIcon {
-                materialIcon: "favorite"
-                mainText: Translation.tr("Donate")
-                onClicked: {
-                    Qt.openUrlExternally("https://github.com/sponsors/end-4")
+                    Qt.openUrlExternally("https://github.com/YaLTeR/niri")
                 }
             }
 
-            
         }
     }
 }
