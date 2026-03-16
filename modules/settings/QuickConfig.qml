@@ -461,6 +461,63 @@ ContentPage {
         }
     }
 
+    ContentSection {
+        icon: "border_outer"
+        title: Translation.tr("Window border")
+
+        ConfigSwitch {
+            buttonIcon: "check"
+            text: Translation.tr("Enable")
+            checked: Config.options.appearance.border.enable
+            onCheckedChanged: { Config.options.appearance.border.enable = checked; }
+        }
+
+        ConfigSwitch {
+            buttonIcon: "palette"
+            text: Translation.tr("Use theme color")
+            enabled: Config.options.appearance.border.enable
+            checked: Config.options.appearance.border.useThemeColor
+            onCheckedChanged: { Config.options.appearance.border.useThemeColor = checked; }
+            StyledToolTip { text: Translation.tr("Automatically pick colors from the Material You theme") }
+        }
+
+        ConfigSpinBox {
+            icon: "line_weight"
+            text: Translation.tr("Width (px)")
+            enabled: Config.options.appearance.border.enable
+            value: Config.options.appearance.border.width
+            from: 1
+            to: 10
+            stepSize: 1
+            onValueChanged: { Config.options.appearance.border.width = value; }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Custom colors")
+            enabled: Config.options.appearance.border.enable && !Config.options.appearance.border.useThemeColor
+
+            ConfigRow {
+                ContentSubsectionLabel { text: Translation.tr("Active") }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "#b5c4ff"
+                    text: Config.options.appearance.border.activeColor
+                    onEditingFinished: { Config.options.appearance.border.activeColor = text; }
+                }
+            }
+            ConfigRow {
+                ContentSubsectionLabel { text: Translation.tr("Inactive") }
+                MaterialTextField {
+                    Layout.fillWidth: true
+                    placeholderText: "#45464f"
+                    text: Config.options.appearance.border.inactiveColor
+                    onEditingFinished: { Config.options.appearance.border.inactiveColor = text; }
+                }
+            }
+            StyledToolTip { text: Translation.tr("Enter hex color (e.g. #ff0000) and press Enter to apply") }
+        }
+    }
+
     NoticeBox {
         Layout.fillWidth: true
         text: Translation.tr('Not all options are available in this app. You should also check the config file by hitting the "Config file" button on the topleft corner or opening %1 manually.').arg(Directories.shellConfigPath)

@@ -152,6 +152,13 @@ Singleton {
                     property string type: "auto" // Allowed: auto, scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
                     property string accentColor: ""
                 }
+                property JsonObject border: JsonObject {
+                    property bool enable: true
+                    property bool useThemeColor: true
+                    property int width: 2
+                    property string activeColor: ""   // hex, used when useThemeColor is false
+                    property string inactiveColor: "" // hex, used when useThemeColor is false
+                }
             }
 
             property JsonObject audio: JsonObject {

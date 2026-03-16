@@ -42,6 +42,7 @@ Singleton {
     property string notificationsPath:     FileUtils.trimFileProtocol(`${Directories.cache}/notifications/notifications.json`)
     property string generatedMaterialThemePath:    FileUtils.trimFileProtocol(`${Directories.state}/user/generated/colors.json`)
     property string generatedWallpaperCategoryPath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/wallpaper/category.txt`)
+    property string generatedNiriColorsPath:       FileUtils.trimFileProtocol(`${Directories.state}/user/generated/niri-colors.kdl`)
 
     // Misc
     property string cliphistDecode:    FileUtils.trimFileProtocol("/tmp/cdl-niri/media/cliphist")

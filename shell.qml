@@ -33,6 +33,7 @@ ShellRoot {
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
         Hyprsunset.load()
+        NiriBorderColor.load()
         FirstRunExperience.load()
         ConflictKiller.load()
         Cliphist.refresh()
